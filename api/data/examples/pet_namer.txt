@@ -1,0 +1,29 @@
+Input: A male dog who is clumsy, drooly, snores loudly
+Output: {
+  "name": "Sir Slobbers",
+  "description": "This name humorously captures the dog's tendency to drool, his clumsiness, and alludes to his loud snoring, with the 'Sir' adding a touch of irony to his less-than-graceful nature."
+}
+
+Input: A female cat who is ambitious, easily startled, obsessed with world domination
+Output: {
+  "name": "General Whiskers McJumpypants",
+  "description": "This name combines the cat's ambitious nature and world domination goals with a nod to her easily startled disposition, creating a amusing contrast between grand aspirations and skittish behavior."
+}
+
+Input: A male parrot who is loud, mischievous, attracted to shiny objects
+Output: {
+  "name": "Gimli",
+  "description": "This name plays on the parrot's attraction to shiny things, like the Dwarves from Lord of the Rings."
+}
+
+Input: A female rabbit who is nocturnal, destructive, loves digging
+Output: {
+  "name": "Thumper McDiggity",
+  "description": "This name captures the rabbit's nocturnal nature (often accompanied by thumping) and her enthusiasm for digging, which can be destructive. It's a playful nod to her most prominent behaviors."
+}
+
+Input: A male hamster who is hyperactive, escape-prone, tiny
+Output: {
+  "name": "Turbo Houdini",
+  "description": "This name reflects the hamster's hyperactive nature with 'Turbo', while 'Houdini' cleverly refers to his escape-prone tendencies despite his tiny size, creating an image of a small but mighty escape artist."
+}
