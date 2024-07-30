@@ -1,0 +1,246 @@
+[
+  {
+    "id": "alpaca",
+    "text": "Alpaca"
+  },
+  {
+    "id": "axolotl",
+    "text": "Axolotl"
+  },
+  {
+    "id": "bearded_dragon",
+    "text": "Bearded Dragon"
+  },
+  {
+    "id": "betta_fish",
+    "text": "Betta Fish"
+  },
+  {
+    "id": "budgerigar",
+    "text": "Budgerigar"
+  },
+  {
+    "id": "canary",
+    "text": "Canary"
+  },
+  {
+    "id": "cat",
+    "text": "Cat"
+  },
+  {
+    "id": "chameleon",
+    "text": "Chameleon"
+  },
+  {
+    "id": "chicken",
+    "text": "Chicken"
+  },
+  {
+    "id": "chinchilla",
+    "text": "Chinchilla"
+  },
+  {
+    "id": "chipmunk",
+    "text": "Chipmunk"
+  },
+  {
+    "id": "cockatiel",
+    "text": "Cockatiel"
+  },
+  {
+    "id": "degu",
+    "text": "Degu"
+  },
+  {
+    "id": "dog",
+    "text": "Dog"
+  },
+  {
+    "id": "duck",
+    "text": "Duck"
+  },
+  {
+    "id": "dugong",
+    "text": "Dugong"
+  },
+  {
+    "id": "fennec_fox",
+    "text": "Fennec Fox"
+  },
+  {
+    "id": "ferret",
+    "text": "Ferret"
+  },
+  {
+    "id": "finch",
+    "text": "Finch"
+  },
+  {
+    "id": "frog",
+    "text": "Frog"
+  },
+  {
+    "id": "gecko",
+    "text": "Gecko"
+  },
+  {
+    "id": "gerbil",
+    "text": "Gerbil"
+  },
+  {
+    "id": "goldfish",
+    "text": "Goldfish"
+  },
+  {
+    "id": "goat",
+    "text": "Goat"
+  },
+  {
+    "id": "goose",
+    "text": "Goose"
+  },
+  {
+    "id": "guinea_pig",
+    "text": "Guinea Pig"
+  },
+  {
+    "id": "guppy",
+    "text": "Guppy"
+  },
+  {
+    "id": "hamster",
+    "text": "Hamster"
+  },
+  {
+    "id": "hedgehog",
+    "text": "Hedgehog"
+  },
+  {
+    "id": "hermit_crab",
+    "text": "Hermit Crab"
+  },
+  {
+    "id": "iguana",
+    "text": "Iguana"
+  },
+  {
+    "id": "koi_fish",
+    "text": "Koi Fish"
+  },
+  {
+    "id": "lizard",
+    "text": "Lizard"
+  },
+  {
+    "id": "lovebird",
+    "text": "Lovebird"
+  },
+  {
+    "id": "mantis",
+    "text": "Mantis"
+  },
+  {
+    "id": "millipede",
+    "text": "Millipede"
+  },
+  {
+    "id": "mini_horse",
+    "text": "Mini Horse"
+  },
+  {
+    "id": "mini_pig",
+    "text": "Mini Pig"
+  },
+  {
+    "id": "mouse",
+    "text": "Mouse"
+  },
+  {
+    "id": "newt",
+    "text": "Newt"
+  },
+  {
+    "id": "otter",
+    "text": "Otter"
+  },
+  {
+    "id": "parrot",
+    "text": "Parrot"
+  },
+  {
+    "id": "peacock",
+    "text": "Peacock"
+  },
+  {
+    "id": "platypus",
+    "text": "Platypus"
+  },
+  {
+    "id": "pony",
+    "text": "Pony"
+  },
+  {
+    "id": "rabbit",
+    "text": "Rabbit"
+  },
+  {
+    "id": "raccoon",
+    "text": "Raccoon"
+  },
+  {
+    "id": "rat",
+    "text": "Rat"
+  },
+  {
+    "id": "salamander",
+    "text": "Salamander"
+  },
+  {
+    "id": "scorpion",
+    "text": "Scorpion"
+  },
+  {
+    "id": "sheep",
+    "text": "Sheep"
+  },
+  {
+    "id": "skink",
+    "text": "Skink"
+  },
+  {
+    "id": "snake",
+    "text": "Snake"
+  },
+  {
+    "id": "squirrel",
+    "text": "Squirrel"
+  },
+  {
+    "id": "stick_insect",
+    "text": "Stick Insect"
+  },
+  {
+    "id": "sugar_glider",
+    "text": "Sugar Glider"
+  },
+  {
+    "id": "tarantula",
+    "text": "Tarantula"
+  },
+  {
+    "id": "tortoise",
+    "text": "Tortoise"
+  },
+  {
+    "id": "turtle",
+    "text": "Turtle"
+  },
+  {
+    "id": "turkey",
+    "text": "Turkey"
+  },
+  {
+    "id": "wallaby",
+    "text": "Wallaby"
+  }
+]

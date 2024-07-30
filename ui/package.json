@@ -1,0 +1,25 @@
+{
+  "name": "ai-applied-demo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build:client": "cd client && npm run build",
+    "build:server": "cd server && npm run build",
+    "setup:client": "cd client && npm install",
+    "setup:server": "cd server && npm install",
+    "dev:server": "cd server && npm run dev",
+    "dev:client": "cd client && npm run dev",
+    "setup": "concurrently npm:setup:*",
+    "dev": "concurrently npm:dev:*",
+    "build": "concurrently npm:build:*",
+    "prod": "cd server && npm run prod"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "concurrently": "^8.2.2",
+    "dotenv": "^16.4.5"
+  }
+}

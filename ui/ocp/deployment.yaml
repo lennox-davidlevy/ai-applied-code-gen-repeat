@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ai-applied-demo
+  namespace: <namespace>
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ai-applied-demo
+  template:
+    metadata:
+      labels:
+        app: ai-applied-demo
+    spec:
+      containers:
+      - name: ai-applied-demo
+        image: <image from image repo>
+        imagePullPolicy: IfNotPresent
+        envFrom:
+          - configMapRef:
+              name: ai-applied-configmap
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ai-applied-demo
+  namespace: <namespace>
+  labels:
+    app: ai-applied-demo
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8080
+  selector:
+    app: ai-applied-demo
+---
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: ai-applied-demo
+  namespace: <namespace>
+  labels:
+    app: ai-applied-demo
+spec:
+  to:
+    kind: Service
+    name: ai-applied-demo
+    weight: 100
+  port:
+    targetPort: 8080
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+  wildcardPolicy: None

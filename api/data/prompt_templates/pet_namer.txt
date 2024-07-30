@@ -1,0 +1,10 @@
+Instruction: Generate a clever and fitting name for a pet based on the provided adjectives and habits of the animal. Your response should follow this format:
+{format_instructions}
+
+Examples:
+{examples}
+
+Input:
+{data}
+
+Output:

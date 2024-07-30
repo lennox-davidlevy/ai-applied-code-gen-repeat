@@ -1,0 +1,31 @@
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+*.pyd
+
+venv/
+.env/
+*.env
+
+.idea/
+.vscode/
+*.swp
+
+# Ignore Docker-related files
+Dockerfile
+.dockerignore
+
+# Ignore logs and temporary files
+*.log
+*.tmp
+
+# Ignore any additional config or sensitive files
+.env
+.env.local
+.env.production
+.env.test
+
+# Ignore any OS-specific files
+.DS_Store
+Thumbs.db

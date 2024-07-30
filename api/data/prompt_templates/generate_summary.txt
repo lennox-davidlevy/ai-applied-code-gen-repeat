@@ -1,0 +1,6 @@
+Summarize the following text in one clear and concise sentence, highlighting the main points.
+{examples}
+Input:
+{data}
+Output:
+
