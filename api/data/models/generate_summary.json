@@ -1,12 +1,16 @@
 {
-  "id": "mistralai/mixtral-8x7b-instruct-v01",
+  "id": "ibm/granite-20b-multilingual",
   "parameters": {
-    "decoding_method": "greedy",
+    "decoding_method": "sample",
     "max_new_tokens": 200,
     "min_new_tokens": 0,
+    "random_seed": null,
     "stop_sequences": [
       "\nInput:"
     ],
+    "temperature": 0.7,
+    "top_k": 50,
+    "top_p": 1,
     "repetition_penalty": 1,
     "include_stop_sequence": false
   },

@@ -16,6 +16,8 @@ from schemas import (
     ExamplesTemplate,
     PromptTemplateRequest,
     JSONResponseTemplate,
+    GeneratePetNameResponse,
+    GenerateSummaryResponse
 )
 
 # Set up basic logging
@@ -117,7 +119,7 @@ async def test_route(request: TestRequest):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@app.post("/generate_summary")
+@app.post("/generate_summary", response_model=GenerateSummaryResponse)
 async def generate_summary(
     llm_name: str = Body(default="generate_summary"),
     prompt_template_name: str = Body(default="generate_summary"),
@@ -129,10 +131,11 @@ async def generate_summary(
     response = await generated_text_response(
         llm_name, prompt_template_name, prompt_template_kwargs
     )
-    return response
+    result = {"generated_text": response}
+    return result
 
 
-@app.post("/generate_pet_name")
+@app.post("/generate_pet_name", response_model=GeneratePetNameResponse)
 async def generate_pet_name(
     llm_name: str = Body(default="pet_namer"),
     prompt_template_name: str = Body(default="pet_namer"),
@@ -143,7 +146,6 @@ async def generate_pet_name(
         llm_name, prompt_template_name, prompt_template_kwargs
     )
     return response
-
 
 async def generated_text_response(
     llm_name: str, prompt_template_name: str, prompt_template_kwargs: Dict[str, Any]
@@ -198,7 +200,6 @@ async def generated_text_response(
     except Exception as e:
         logging.error(f"Error in generate_response: {e}")
         raise HTTPException(status_code=500, detail=str(e))
-
 
 async def generate_json_response(
     llm_name: str, prompt_template_name: str, prompt_template_kwargs: Dict[str, Any]

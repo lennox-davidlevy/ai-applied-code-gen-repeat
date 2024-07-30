@@ -2,4 +2,6 @@ from .test_request import TestRequest
 from .prompt_template import PromptTemplateRequest
 from .examples_template import ExamplesTemplate
 from .json_response_template import JSONResponseTemplate
+from .pet_namer_response import GeneratePetNameResponse
+from .generate_summary_response import GenerateSummaryResponse
 

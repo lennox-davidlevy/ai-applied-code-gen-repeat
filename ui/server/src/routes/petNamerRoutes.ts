@@ -34,3 +34,4 @@ router.post('/generate_pet_name', async (req: Request, res: Response) => {
 });
 
 export default router;
+

@@ -27,7 +27,11 @@ import { Add, CloseFilled } from '@carbon/icons-react';
 
 import axios from 'axios';
 
+//******************* Animal type data ********************//
+
 import data from './data.json';
+
+//***************** TypeScript interfaces *****************//
 
 interface AnimalType {
   id: string;
@@ -48,16 +52,25 @@ interface RenderedResults {
   description: string;
 }
 
+//*********************************************************//
+
 const PetForm = () => {
+  // Component Functionality
   // State for dynamic rendering
+
+  //**************** State for dynamic rendering ****************//
+
   const [disableSubmitButton, setDisableSubmitButton] = useState<boolean>(true);
   const [disableClearButton, setDisableClearButton] = useState<boolean>(true);
-  const [loading, setLoading] = useState<boolean>(false);
   const [disableWhileLoading, setDisableWhileLoading] =
     useState<boolean>(false);
-  const [openAccordion, setOpenAccordion] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
-  // State for data to send to API
+  // error variable to add a retry button
+  const [error, setError] = useState<boolean>(false);
+
+  //************ State for data to send to API ******************//
+
   const [typeOfAnimal, setTypeOfAnimal] = useState<AnimalType>({
     id: '',
     text: '',
@@ -68,7 +81,8 @@ const PetForm = () => {
   const [descriptors, setDescriptors] = useState<string[]>([]);
   const [inputValue, setInputValue] = useState<string>('');
 
-  // State for response from API
+  //************ State for response from API ********************//
+
   const [renderedResults, setRenderedResults] = useState<RenderedResults>({
     name: '',
     description: '',
@@ -77,8 +91,9 @@ const PetForm = () => {
     string,
     any
   > | null>(null);
+  const [openAccordion, setOpenAccordion] = useState<boolean>(false);
 
-  //Disable Buttons based on state and loading
+  //******** Disable Buttons based on state and loading *********//
 
   useEffect(() => {
     // Every field should have some value
@@ -103,7 +118,7 @@ const PetForm = () => {
     setDisableWhileLoading(loading);
   }, [loading]);
 
-  // ComboBox Functionality
+  //**************** ComboBox Functionality **********************//
 
   const handleComboBoxChange = useCallback((item: ComboBoxChangeEvent) => {
     const { selectedItem } = item;
@@ -120,7 +135,7 @@ const PetForm = () => {
       .includes(menu?.inputValue?.toLowerCase());
   };
 
-  // Descriptor Functionality
+  //****************** Descriptor Functionality ******************//
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>): void => {
     setInputValue(e.target.value);
@@ -145,35 +160,51 @@ const PetForm = () => {
     }
   };
 
-  // Submit Functionality
+  //********************* UseEffect Loggins **********************//
+  useEffect(() => {
+    if (!descriptors || descriptors.length === 0) return;
+    console.log('Descriptors: ');
+    console.log(descriptors);
+  }, [descriptors]);
+
+  //******************** Submit Functionality ********************//
 
   const handleSubmit = async () => {
     // grab the descriptor strings from the array and join them into a comma seperated string
     const descriptorsString = descriptors.join(', ');
-
     // interpolate all the data collected from the form into a single string
     const stringToSendToAPI = `A ${
       genderOfAnimal === 'male' ? 'male' : 'female'
     } ${typeOfAnimal.text.toLowerCase()} who is ${descriptorsString}`;
-
     try {
+      // Set loading to true
       setLoading(true);
+      setError(false);
+      // Make API call
       const result = await axios.post('/api/pet_namer/generate_pet_name', {
         data: stringToSendToAPI,
       });
+
+      // extract relevant data from response
       const obj = result.data.generated_text;
-      const requestSentToLLM = result.data.request_sent_to_llm;
+      const requestSentToAPI = result.data.request_sent_to_llm;
+      // set response name and description to state
       setRenderedResults(obj);
-      setRenderedRequest(requestSentToLLM);
+      // set data sent to API to state
+      setRenderedRequest(requestSentToAPI);
+      // open accordions
       setOpenAccordion(true);
     } catch (err) {
+      // log error
       console.log(err);
+      setError(true);
     } finally {
+      // set loading to false
       setLoading(false);
     }
   };
 
-  // Clear Functionality
+  //******************** Clear Functionality *********************//
 
   const handleClear = () => {
     setDescriptors([]);
@@ -183,6 +214,7 @@ const PetForm = () => {
     setRenderedResults({ name: '', description: '' });
     setRenderedRequest(null);
     setOpenAccordion(false);
+    setError(false);
   };
 
   return (
@@ -278,6 +310,16 @@ const PetForm = () => {
               >
                 Submit
               </Button>
+              {error && (
+                <Button
+                  type='button'
+                  kind='danger'
+                  onClick={handleSubmit}
+                  disabled={disableSubmitButton || disableWhileLoading}
+                >
+                  Retry
+                </Button>
+              )}
             </ButtonSet>
           </Stack>
         </Form>
