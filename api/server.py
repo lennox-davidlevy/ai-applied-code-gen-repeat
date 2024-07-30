@@ -132,19 +132,6 @@ async def generate_summary(
     return response
 
 
-@app.post("/generate_pet_name")
-async def generate_pet_name(
-    llm_name: str = Body(default="pet_namer"),
-    prompt_template_name: str = Body(default="pet_namer"),
-    prompt_template_kwargs: Dict[str, str] = Body(...),
-):
-
-    response = await generate_json_response(
-        llm_name, prompt_template_name, prompt_template_kwargs
-    )
-    return response
-
-
 async def generated_text_response(
     llm_name: str, prompt_template_name: str, prompt_template_kwargs: Dict[str, Any]
 ) -> str:
@@ -195,69 +182,6 @@ async def generated_text_response(
         generated_text = chain.invoke(prompt_template_kwargs)
 
         return generated_text
-    except Exception as e:
-        logging.error(f"Error in generate_response: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
-
-
-async def generate_json_response(
-    llm_name: str, prompt_template_name: str, prompt_template_kwargs: Dict[str, Any]
-) -> dict:
-    """
-    Generate a JSON response using a specified model and prompt template.
-
-    Args:
-        llm_name (str): The name of the language model to use.
-        prompt_template_name (str): The name of the prompt template to use.
-        prompt_template_kwargs (Dict[str, Any]): The keyword arguments for the prompt template.
-
-    Returns:
-        dict: A dictionary containing the generated response in JSON format.
-              The response is nested under the key 'generated_text'.
-
-    Raises:
-        HTTPException: If the specified model or prompt template is not found,
-                       or if there's an error during the generation process.
-    """
-    try:
-        model_request = models.get(llm_name)
-        if not model_request:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"Model with name {llm_name} not found",
-            )
-
-        prompt_template_request = prompt_templates.get(prompt_template_name)
-        if not prompt_template_request:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"PromptTemplate with name {prompt_template_name} not found",
-            )
-
-        examples = examples_templates.get(
-            prompt_template_name, ExamplesTemplate(template="")
-        )
-        if not examples:
-            logging.warning(
-                f"Examples for prompt template {prompt_template_name} not found. Using empty string."
-            )
-
-        model = model_request.get_model()
-        prompt_template = PromptTemplate.from_template(
-            template=prompt_template_request.template
-        )
-        output_parser = PydanticOutputParser(
-            pydantic_object=JSONResponseTemplate)
-        format_instructions = output_parser.get_format_instructions()
-
-        prompt_template_kwargs["format_instructions"] = format_instructions
-        prompt_template_kwargs["examples"] = examples.template
-
-        chain = prompt_template | model | output_parser
-        results = chain.invoke(prompt_template_kwargs)
-
-        result = {"generated_text": results.dict()}
-        return result
     except Exception as e:
         logging.error(f"Error in generate_response: {e}")
         raise HTTPException(status_code=500, detail=str(e))

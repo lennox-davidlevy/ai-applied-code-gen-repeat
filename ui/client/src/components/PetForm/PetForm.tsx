@@ -27,7 +27,12 @@ import { Add, CloseFilled } from '@carbon/icons-react';
 
 import axios from 'axios';
 
+//******************* Animal type data ********************//
+
 import data from './data.json';
+
+
+//***************** TypeScript interfaces *****************//
 
 interface AnimalType {
   id: string;
@@ -48,16 +53,23 @@ interface RenderedResults {
   description: string;
 }
 
+//*********************************************************//
+
 const PetForm = () => {
+  // Component Functionality
   // State for dynamic rendering
+
+  //**************** State for dynamic rendering ****************//
+
   const [disableSubmitButton, setDisableSubmitButton] = useState<boolean>(true);
   const [disableClearButton, setDisableClearButton] = useState<boolean>(true);
-  const [loading, setLoading] = useState<boolean>(false);
   const [disableWhileLoading, setDisableWhileLoading] =
     useState<boolean>(false);
-  const [openAccordion, setOpenAccordion] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
-  // State for data to send to API
+
+  //************ State for data to send to API ******************//
+
   const [typeOfAnimal, setTypeOfAnimal] = useState<AnimalType>({
     id: '',
     text: '',
@@ -68,7 +80,9 @@ const PetForm = () => {
   const [descriptors, setDescriptors] = useState<string[]>([]);
   const [inputValue, setInputValue] = useState<string>('');
 
-  // State for response from API
+
+  //************ State for response from API ********************//
+
   const [renderedResults, setRenderedResults] = useState<RenderedResults>({
     name: '',
     description: '',
@@ -77,8 +91,10 @@ const PetForm = () => {
     string,
     any
   > | null>(null);
+  const [openAccordion, setOpenAccordion] = useState<boolean>(false);
 
-  //Disable Buttons based on state and loading
+
+  //******** Disable Buttons based on state and loading *********//
 
   useEffect(() => {
     // Every field should have some value
@@ -103,7 +119,8 @@ const PetForm = () => {
     setDisableWhileLoading(loading);
   }, [loading]);
 
-  // ComboBox Functionality
+
+  //**************** ComboBox Functionality **********************//
 
   const handleComboBoxChange = useCallback((item: ComboBoxChangeEvent) => {
     const { selectedItem } = item;
@@ -120,7 +137,8 @@ const PetForm = () => {
       .includes(menu?.inputValue?.toLowerCase());
   };
 
-  // Descriptor Functionality
+
+  //****************** Descriptor Functionality ******************//
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>): void => {
     setInputValue(e.target.value);
@@ -145,35 +163,28 @@ const PetForm = () => {
     }
   };
 
-  // Submit Functionality
+  //******************** Submit Functionality ********************//
 
   const handleSubmit = async () => {
     // grab the descriptor strings from the array and join them into a comma seperated string
-    const descriptorsString = descriptors.join(', ');
-
-    // interpolate all the data collected from the form into a single string
-    const stringToSendToAPI = `A ${
-      genderOfAnimal === 'male' ? 'male' : 'female'
-    } ${typeOfAnimal.text.toLowerCase()} who is ${descriptorsString}`;
+      // interpolate all the data collected from the form into a single string
 
     try {
-      setLoading(true);
-      const result = await axios.post('/api/pet_namer/generate_pet_name', {
-        data: stringToSendToAPI,
-      });
-      const obj = result.data.generated_text;
-      const requestSentToLLM = result.data.request_sent_to_llm;
-      setRenderedResults(obj);
-      setRenderedRequest(requestSentToLLM);
-      setOpenAccordion(true);
+      // Set loading to true
+      // Make API call
+        // extract relevant data from response
+          // set response name and description to state 
+          // set data sent to API to state
+          // open accordions
     } catch (err) {
+      // log error
       console.log(err);
     } finally {
-      setLoading(false);
+      // set loading to false
     }
   };
 
-  // Clear Functionality
+  //******************** Clear Functionality *********************//
 
   const handleClear = () => {
     setDescriptors([]);
@@ -190,125 +201,13 @@ const PetForm = () => {
       <Column sm={2} md={4} lg={8} className='pet-form-container'>
         <Form aria-label='Pet Form'>
           <Stack gap={7}>
-            <Heading className='form_group__heading'>
-              Describe your future pet!
-            </Heading>
-
-            <ComboBox
-              onChange={handleComboBoxChange}
-              id='type-of-animal-combobox'
-              items={data}
-              itemToString={sortComboBox}
-              titleText='Type of Animal'
-              shouldFilterItem={filterItems}
-              selectedItem={typeOfAnimal}
-              disabled={disableWhileLoading}
-            />
-            <FormGroup legendText='Pet Gender'>
-              <Checkbox
-                id='male_checkbox'
-                labelText='Male'
-                checked={genderOfAnimal === 'male'}
-                onChange={() =>
-                  setGenderOfAnimal(genderOfAnimal === 'male' ? '' : 'male')
-                }
-                disabled={disableWhileLoading}
-              />
-              <Checkbox
-                id='female_checkbox'
-                labelText='Female'
-                checked={genderOfAnimal === 'female'}
-                onChange={() =>
-                  setGenderOfAnimal(genderOfAnimal === 'female' ? '' : 'female')
-                }
-                disabled={disableWhileLoading}
-              />
-            </FormGroup>
-            <div className='input-button-container'>
-              <TextInput
-                id='add-descriptor'
-                labelText='Add Descriptors'
-                value={inputValue}
-                onChange={handleInputChange}
-                onKeyDown={handleKeyDown}
-                disabled={disableWhileLoading}
-              />
-              <Button
-                hasIconOnly
-                iconDescription='Add Descriptor'
-                renderIcon={Add}
-                tooltipAlignment='start'
-                tooltipPosition='top'
-                onClick={handleAddDescriptor}
-                disabled={inputValue.length === 0 || disableWhileLoading}
-              />
-            </div>
-
-            <Tile>
-              {descriptors.map((descriptor, index) => (
-                <span
-                  key={index}
-                  onClick={() => handleClearDescriptorFromList(descriptor)}
-                >
-                  <Tag
-                    key={index}
-                    className='descriptor-tag'
-                    renderIcon={CloseFilled}
-                    disabled={disableWhileLoading}
-                  >
-                    {descriptor}
-                  </Tag>
-                </span>
-              ))}
-            </Tile>
-
-            <ButtonSet>
-              <Button
-                type='button'
-                kind='secondary'
-                onClick={handleClear}
-                disabled={!!disableClearButton || disableWhileLoading}
-              >
-                Clear
-              </Button>
-              <Button
-                type='button'
-                onClick={handleSubmit}
-                disabled={disableSubmitButton || disableWhileLoading}
-              >
-                Submit
-              </Button>
-            </ButtonSet>
+            <div>Pet Form!</div>
           </Stack>
         </Form>
       </Column>
       <Column sm={2} md={4} lg={8}>
         <Stack gap={8}>
-          <Heading className='form_group__heading'>Result</Heading>
-          {loading ? (
-            <AccordionSkeleton count={3} open={false} />
-          ) : (
-            <Accordion>
-              <AccordionItem title='Name' open={openAccordion}>
-                {renderedResults.name && (
-                  <span className='bold-text'>{renderedResults.name}</span>
-                )}
-              </AccordionItem>
-              <AccordionItem title='Description' open={openAccordion}>
-                {renderedResults.description && renderedResults.description}
-              </AccordionItem>
-              <AccordionItem
-                title='Data sent to API'
-                className='accordian-request'
-              >
-                {renderedRequest && (
-                  <pre className='accordion-content'>
-                    {JSON.stringify(renderedRequest, null, 2)}
-                  </pre>
-                )}
-              </AccordionItem>
-            </Accordion>
-          )}
+          <div>Results!</div>
         </Stack>
       </Column>
     </>
