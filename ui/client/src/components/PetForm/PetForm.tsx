@@ -31,7 +31,6 @@ import axios from 'axios';
 
 import data from './data.json';
 
-
 //***************** TypeScript interfaces *****************//
 
 interface AnimalType {
@@ -67,6 +66,8 @@ const PetForm = () => {
     useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
 
+  // error variable to add a retry button
+  const [error, setError] = useState<boolean>(false);
 
   //************ State for data to send to API ******************//
 
@@ -80,7 +81,6 @@ const PetForm = () => {
   const [descriptors, setDescriptors] = useState<string[]>([]);
   const [inputValue, setInputValue] = useState<string>('');
 
-
   //************ State for response from API ********************//
 
   const [renderedResults, setRenderedResults] = useState<RenderedResults>({
@@ -92,7 +92,6 @@ const PetForm = () => {
     any
   > | null>(null);
   const [openAccordion, setOpenAccordion] = useState<boolean>(false);
-
 
   //******** Disable Buttons based on state and loading *********//
 
@@ -119,7 +118,6 @@ const PetForm = () => {
     setDisableWhileLoading(loading);
   }, [loading]);
 
-
   //**************** ComboBox Functionality **********************//
 
   const handleComboBoxChange = useCallback((item: ComboBoxChangeEvent) => {
@@ -136,7 +134,6 @@ const PetForm = () => {
       ?.toLowerCase()
       .includes(menu?.inputValue?.toLowerCase());
   };
-
 
   //****************** Descriptor Functionality ******************//
 
@@ -163,24 +160,47 @@ const PetForm = () => {
     }
   };
 
+  //********************* UseEffect Loggins **********************//
+  useEffect(() => {
+    if (!descriptors || descriptors.length === 0) return;
+    console.log('Descriptors: ');
+    console.log(descriptors);
+  }, [descriptors]);
+
   //******************** Submit Functionality ********************//
 
   const handleSubmit = async () => {
     // grab the descriptor strings from the array and join them into a comma seperated string
-      // interpolate all the data collected from the form into a single string
-
+    const descriptorsString = descriptors.join(', ');
+    // interpolate all the data collected from the form into a single string
+    const stringToSendToAPI = `A ${
+      genderOfAnimal === 'male' ? 'male' : 'female'
+    } ${typeOfAnimal.text.toLowerCase()} who is ${descriptorsString}`;
     try {
       // Set loading to true
+      setLoading(true);
+      setError(false);
       // Make API call
-        // extract relevant data from response
-          // set response name and description to state 
-          // set data sent to API to state
-          // open accordions
+      const result = await axios.post('/api/pet_namer/generate_pet_name', {
+        data: stringToSendToAPI,
+      });
+
+      // extract relevant data from response
+      const obj = result.data.generated_text;
+      const requestSentToAPI = result.data.request_sent_to_llm;
+      // set response name and description to state
+      setRenderedResults(obj);
+      // set data sent to API to state
+      setRenderedRequest(requestSentToAPI);
+      // open accordions
+      setOpenAccordion(true);
     } catch (err) {
       // log error
       console.log(err);
+      setError(true);
     } finally {
       // set loading to false
+      setLoading(false);
     }
   };
 
@@ -194,6 +214,7 @@ const PetForm = () => {
     setRenderedResults({ name: '', description: '' });
     setRenderedRequest(null);
     setOpenAccordion(false);
+    setError(false);
   };
 
   return (
@@ -201,13 +222,135 @@ const PetForm = () => {
       <Column sm={2} md={4} lg={8} className='pet-form-container'>
         <Form aria-label='Pet Form'>
           <Stack gap={7}>
-            <div>Pet Form!</div>
+            <Heading className='form_group__heading'>
+              Describe your future pet!
+            </Heading>
+
+            <ComboBox
+              onChange={handleComboBoxChange}
+              id='type-of-animal-combobox'
+              items={data}
+              itemToString={sortComboBox}
+              titleText='Type of Animal'
+              shouldFilterItem={filterItems}
+              selectedItem={typeOfAnimal}
+              disabled={disableWhileLoading}
+            />
+            <FormGroup legendText='Pet Gender'>
+              <Checkbox
+                id='male_checkbox'
+                labelText='Male'
+                checked={genderOfAnimal === 'male'}
+                onChange={() =>
+                  setGenderOfAnimal(genderOfAnimal === 'male' ? '' : 'male')
+                }
+                disabled={disableWhileLoading}
+              />
+              <Checkbox
+                id='female_checkbox'
+                labelText='Female'
+                checked={genderOfAnimal === 'female'}
+                onChange={() =>
+                  setGenderOfAnimal(genderOfAnimal === 'female' ? '' : 'female')
+                }
+                disabled={disableWhileLoading}
+              />
+            </FormGroup>
+            <div className='input-button-container'>
+              <TextInput
+                id='add-descriptor'
+                labelText='Add Descriptors'
+                value={inputValue}
+                onChange={handleInputChange}
+                onKeyDown={handleKeyDown}
+                disabled={disableWhileLoading}
+              />
+              <Button
+                hasIconOnly
+                iconDescription='Add Descriptor'
+                renderIcon={Add}
+                tooltipAlignment='start'
+                tooltipPosition='top'
+                onClick={handleAddDescriptor}
+                disabled={inputValue.length === 0 || disableWhileLoading}
+              />
+            </div>
+
+            <Tile>
+              {descriptors.map((descriptor, index) => (
+                <span
+                  key={index}
+                  onClick={() => handleClearDescriptorFromList(descriptor)}
+                >
+                  <Tag
+                    key={index}
+                    className='descriptor-tag'
+                    renderIcon={CloseFilled}
+                    disabled={disableWhileLoading}
+                  >
+                    {descriptor}
+                  </Tag>
+                </span>
+              ))}
+            </Tile>
+
+            <ButtonSet>
+              <Button
+                type='button'
+                kind='secondary'
+                onClick={handleClear}
+                disabled={!!disableClearButton || disableWhileLoading}
+              >
+                Clear
+              </Button>
+              <Button
+                type='button'
+                onClick={handleSubmit}
+                disabled={disableSubmitButton || disableWhileLoading}
+              >
+                Submit
+              </Button>
+              {error && (
+                <Button
+                  type='button'
+                  kind='danger'
+                  onClick={handleSubmit}
+                  disabled={disableSubmitButton || disableWhileLoading}
+                >
+                  Retry
+                </Button>
+              )}
+            </ButtonSet>
           </Stack>
         </Form>
       </Column>
       <Column sm={2} md={4} lg={8}>
         <Stack gap={8}>
-          <div>Results!</div>
+          <Heading className='form_group__heading'>Result</Heading>
+          {loading ? (
+            <AccordionSkeleton count={3} open={false} />
+          ) : (
+            <Accordion>
+              <AccordionItem title='Name' open={openAccordion}>
+                {renderedResults.name && (
+                  <span className='bold-text'>{renderedResults.name}</span>
+                )}
+              </AccordionItem>
+              <AccordionItem title='Description' open={openAccordion}>
+                {renderedResults.description && renderedResults.description}
+              </AccordionItem>
+              <AccordionItem
+                title='Data sent to API'
+                className='accordian-request'
+              >
+                {renderedRequest && (
+                  <pre className='accordion-content'>
+                    {JSON.stringify(renderedRequest, null, 2)}
+                  </pre>
+                )}
+              </AccordionItem>
+            </Accordion>
+          )}
         </Stack>
       </Column>
     </>
