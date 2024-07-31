@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 
 from ibm_watsonx_ai import Credentials
 from ibm_watsonx_ai.foundation_models import ModelInference
-from ibm_watsonx_ai.foundation_models.utils.enums import ModelTypes, DecodingMethods
+from ibm_watsonx_ai.foundation_models.utils.enums import DecodingMethods
 from ibm_watsonx_ai.metanames import GenTextParamsMetaNames as GenParams
 from langchain_ibm import WatsonxLLM
 
@@ -52,12 +52,10 @@ class ModelRequest(BaseModel):
         Raises:
             ValueError: If the service provider is not recognized.
         """
-        if self.service_provider == "bam":
-            return get_bam_model(self.id, self.parameters)
-        elif self.service_provider == "wxai":
+        if self.service_provider == "wxai":
             return get_wxai_model(self.id, self.parameters)
         else:
-            raise ValueError("Invalid service provider. Must be 'bam' or 'wml'")
+            raise ValueError("Invalid service provider. Must be or 'wxai'")
 
 
 def set_parameters(model_parameters: Optional[Dict] = None) -> Dict:
@@ -115,40 +113,6 @@ def set_parameters(model_parameters: Optional[Dict] = None) -> Dict:
         for key in default_parameters_for_sample
     }
 
-
-def get_bam_model(model_id: str, model_parameters: Optional[Dict] = None) -> LLM:
-    """
-    For Client Engineering Engagements during exploration and testing
-    Get a BAM language model instance.
-
-    Args:
-        model_id (str): The model ID.
-        model_parameters (Optional[Dict], optional): The model parameters.
-        Defaults to None.
-
-    Returns:
-        LLM: The BAM language model instance.
-
-    Raises:
-        Exception: If the model creation fails.
-    """
-    from genai import Client, Credentials
-    from genai.extensions.langchain import LangChainInterface
-    from genai.schema import TextGenerationParameters
-
-    try:
-        client = Client(credentials=Credentials.from_env())
-        if model_parameters is None:
-            model_parameters = {}
-        genai_parameters = TextGenerationParameters(**model_parameters)
-        llm = LangChainInterface(
-            client=client, model_id=model_id, parameters=genai_parameters
-        )
-        return llm
-    except Exception as e:
-        raise Exception(f"Failed to create BAM model: {str(e)}")
-
-
 def get_wxai_model(model_id: str, model_parameters: Optional[Dict] = None) -> LLM:
     """
     Get a watsonx.ai language model instance.
@@ -196,8 +160,7 @@ if __name__ == "__main__":
     from langchain.prompts import PromptTemplate
     from langchain_core.output_parsers import StrOutputParser
 
-    # Example usage of BAM model
-    model = get_bam_model(model_id="meta-llama/llama-2-70b-chat")
+    model = get_wxai_model(model_id="ibm/granite-20b-multilingual")
     pt2 = PromptTemplate(
         input_variables=["question"],
         template="Answer the following question: {question}",
