@@ -1,0 +1,11 @@
+fastapi==0.109.2
+langchain
+langchain-ibm
+ibm-watsonx-ai
+ibm-generative-ai[langchain]==2.1.1
+python-dotenv
+
+black
+pytest
+pytest-asyncio
+uvicorn
