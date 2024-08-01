@@ -59,9 +59,9 @@ def load_models():
             file_path = os.path.join(MODELS_DIR_PATH, filename)
             with open(file_path, "r") as f:
                 model_data = json.load(f)
-            model_name = filename[:-5]
+            template_model = filename[:-5]
             model_request = ModelRequest.from_json(model_data)
-            models[model_name] = model_request
+            models[template_model] = model_request
 
 
 def load_prompt_templates():
@@ -119,7 +119,7 @@ async def test_route(request: TestRequest):
 
 @app.post("/generate_summary")
 async def generate_summary(
-    model_name: str = Body(default="generate_summary"),
+    template_model: str = Body(default="generate_summary"),
     prompt_template_name: str = Body(default="generate_summary"),
     prompt_template_kwargs: Dict[str, str] = Body(...),
 ):
@@ -127,20 +127,20 @@ async def generate_summary(
     Endpoint to generate a summary based on provided data.
     """
     response = await generated_text_response(
-        model_name, prompt_template_name, prompt_template_kwargs
+        template_model, prompt_template_name, prompt_template_kwargs
     )
     return response
 
 
 async def generated_text_response(
-    model_name: str, prompt_template_name: str, prompt_template_kwargs: Dict[str, Any]
+    template_model: str, prompt_template_name: str, prompt_template_kwargs: Dict[str, Any]
 ) -> str:
     """
     Common functionality to generate a response using a specified model
     and prompt template.
 
     Args:
-        model_name (str): The name of the models type to use.
+        template_model(str): The name of the models type to use.
         prompt_template_name (str): The name of the prompt template to use.
         prompt_template_kwargs (Dict[str, Any]): The keyword arguments for the prompt template.
 
@@ -148,11 +148,11 @@ async def generated_text_response(
         str: The generated text response from the model.
     """
     try:
-        model_request = models.get(model_name)
+        model_request = models.get(template_model)
         if not model_request:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"Model with name {model_name} not found",
+                detail=f"Model with name {template_model} not found",
             )
 
         prompt_template_request = prompt_templates.get(prompt_template_name)
