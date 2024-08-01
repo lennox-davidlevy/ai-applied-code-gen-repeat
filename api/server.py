@@ -121,7 +121,7 @@ async def test_route(request: TestRequest):
 
 @app.post("/generate_summary", response_model=GenerateSummaryResponse)
 async def generate_summary(
-    llm_name: str = Body(default="generate_summary"),
+    model_name: str = Body(default="generate_summary"),
     prompt_template_name: str = Body(default="generate_summary"),
     prompt_template_kwargs: Dict[str, str] = Body(...),
 ):
@@ -129,7 +129,7 @@ async def generate_summary(
     Endpoint to generate a summary based on provided data.
     """
     response = await generated_text_response(
-        llm_name, prompt_template_name, prompt_template_kwargs
+        model_name, prompt_template_name, prompt_template_kwargs
     )
     result = {"generated_text": response}
     return result
@@ -137,25 +137,25 @@ async def generate_summary(
 
 @app.post("/generate_pet_name", response_model=GeneratePetNameResponse)
 async def generate_pet_name(
-    llm_name: str = Body(default="pet_namer"),
+    model_name: str = Body(default="pet_namer"),
     prompt_template_name: str = Body(default="pet_namer"),
     prompt_template_kwargs: Dict[str, str] = Body(...),
 ):
 
     response = await generate_json_response(
-        llm_name, prompt_template_name, prompt_template_kwargs
+        model_name, prompt_template_name, prompt_template_kwargs
     )
     return response
 
 async def generated_text_response(
-    llm_name: str, prompt_template_name: str, prompt_template_kwargs: Dict[str, Any]
+    model_name: str, prompt_template_name: str, prompt_template_kwargs: Dict[str, Any]
 ) -> str:
     """
     Common functionality to generate a response using a specified model
     and prompt template.
 
     Args:
-        llm_name (str): The name of the models type to use.
+        model_name (str): The name of the models type to use.
         prompt_template_name (str): The name of the prompt template to use.
         prompt_template_kwargs (Dict[str, Any]): The keyword arguments for the prompt template.
 
@@ -163,11 +163,11 @@ async def generated_text_response(
         str: The generated text response from the model.
     """
     try:
-        model_request = models.get(llm_name)
+        model_request = models.get(model_name)
         if not model_request:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"Model with name {llm_name} not found",
+                detail=f"Model with name {model_name} not found",
             )
 
         prompt_template_request = prompt_templates.get(prompt_template_name)
@@ -202,13 +202,13 @@ async def generated_text_response(
         raise HTTPException(status_code=500, detail=str(e))
 
 async def generate_json_response(
-    llm_name: str, prompt_template_name: str, prompt_template_kwargs: Dict[str, Any]
+    model_name: str, prompt_template_name: str, prompt_template_kwargs: Dict[str, Any]
 ) -> dict:
     """
     Generate a JSON response using a specified model and prompt template.
 
     Args:
-        llm_name (str): The name of the language model to use.
+        model_name (str): The name of the language model to use.
         prompt_template_name (str): The name of the prompt template to use.
         prompt_template_kwargs (Dict[str, Any]): The keyword arguments for the prompt template.
 
@@ -221,11 +221,11 @@ async def generate_json_response(
                        or if there's an error during the generation process.
     """
     try:
-        model_request = models.get(llm_name)
+        model_request = models.get(model_name)
         if not model_request:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"Model with name {llm_name} not found",
+                detail=f"Model with name {model_name} not found",
             )
 
         prompt_template_request = prompt_templates.get(prompt_template_name)
