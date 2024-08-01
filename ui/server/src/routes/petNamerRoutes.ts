@@ -16,7 +16,7 @@ router.post('/generate_pet_name', async (req: Request, res: Response) => {
   const { data } = req.body;
   try {
     const body = {
-      model_name: 'pet_namer',
+      template_model: 'pet_namer',
       prompt_template_name: 'pet_namer',
       prompt_template_kwargs: {
         data: data,
