@@ -69,7 +69,7 @@ To get the project running locally, follow these steps:
    pyenv activate fs_genai_demo
    ```
 
-5. Copy the `.env.example` file to `.env` in each of the following directories `ui/server`, `ui/client`, and `api`. The only values needed to be filled in are in the `api/` and there fill in your `project_id` and `iam` credentials for watsonx.ai integration.
+5. Copy the `.env.example` file to `.env` in the `api/` directory and there fill in your `project_id` and `iam` credentials for watsonx.ai integration.
 
    ```bash
    cp .env.example .env
