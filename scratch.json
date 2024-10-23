@@ -1,7 +1,0 @@
-{
-  "llm_name": "pet_namer",
-  "prompt_template_name": "pet_namer",
-  "prompt_template_kwargs": {
-    "data": "dog, funny, smelly, weird"
-  }
-}
