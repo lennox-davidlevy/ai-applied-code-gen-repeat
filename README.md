@@ -47,7 +47,7 @@ To get the project running locally, follow these steps:
 1. Clone the repository:
 
    ```bash
-   git clone https://github.ibm.com/David-Levy/ai-applied-demo.git
+   git clone https://github.com/lennox-davidlevy/ai-applied-code-gen-repeat.git
    ```
 
 2. Install the root dependencies:
